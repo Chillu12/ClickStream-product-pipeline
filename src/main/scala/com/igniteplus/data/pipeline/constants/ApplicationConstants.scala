@@ -32,6 +32,9 @@ object ApplicationConstants {
   val ITEM_PRICE : String = "item_price"
   val DEPARTMENT_NAME:String = "department_name"
   val ITEM_UNIQUE_COLUMN : Seq[String] = Seq(ApplicationConstants.ITEM_ID)
+  
+  // exit code 
+  val FAILURE_EXIT_CODE : Int = 1
 
 
   val CLICK_STREAM_VALID_DATATYPE_COLUMNS:Seq[String] = Seq(ApplicationConstants.EVENT_TIMESTAMP)
