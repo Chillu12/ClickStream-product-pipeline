@@ -24,6 +24,7 @@ object MainProduct  extends Logging{
          logError("Unknown exception",ex)
      case ex: Exception =>
        logError("null point exception", ex)
+     sys.exit(ApplicationConstants.FAILURE_EXIT_CODE)
    }
   }
 
