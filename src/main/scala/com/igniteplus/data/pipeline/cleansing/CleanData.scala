@@ -105,7 +105,7 @@ object CleanData {
                         keyColumns : Seq[String]
                        ) : DataFrame  = {
     if (orderByCol != null ) {
-      val windowSpec = Window.partitionBy(keyColumns.map(col): _*).orderBy(desc(orderByCol.toString))
+      val windowSpec = Window.partitionBy(keyColumns.map(col): _*).orderBy(desc(orderByCol))
       val dfDropDuplicate: DataFrame = df.withColumn(colName = "row_number", row_number().over(windowSpec))
         .filter(conditionExpr = "row_number == 1").drop("row_number")
       println("Distinct count of session_id and visitor_id  and event_timestamp and item id: " + dfDropDuplicate.count())
