@@ -8,30 +8,26 @@ object FileWriterService {
 def writeFile(df:DataFrame,
               fileFormate:String,
               fileSaveMode:String,
-              filePath:String)(implicit spark:SparkSession): DataFrame = {
+              filePath:String): Unit = {
 
 
-  val dfWriteData: DataFrame = {
+  val dfWriteData: Unit = {
     try {
       df.write.format(fileFormate).mode(fileSaveMode).save(filePath)
       df
     }
     catch {
       case e: Exception =>
-        FileWriteException("unable to write files in the given location" + s"$INPUT_WRITE_DATA")
-        spark.emptyDataFrame
+        FileWriteException("unable to write files in the given location" + filePath)
+       
     }
 
   }
 
-    val dfClickStreamCount: Long = dfWriteData.count()
-
-    if (dfClickStreamCount == 0) {
-      throw FileReadException("no file read from the reader " + s"$INPUT_WRITE_DATA")
+    if (dfWriteData == 0) {
+      throw FileReadException("no file read from the reader " +filePath)
     }
-    else {
-      dfWriteData
-    }
+    
   }
 }
 
