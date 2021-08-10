@@ -7,14 +7,15 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 object FileWriterService {
 def writeFile(df:DataFrame,
               fileFormate:String,
-              fileSaveMode:String,
               filePath:String): Unit = {
 
 
   val dfWriteData: Unit = {
     try {
-      df.write.format(fileFormate).mode(fileSaveMode).save(filePath)
-      df
+      df.write.format(fileFormat).option("header", "true")
+              .mode("overwrite")
+              .option("sep", ",")
+              .save(path)
     }
     catch {
       case e: Exception =>
