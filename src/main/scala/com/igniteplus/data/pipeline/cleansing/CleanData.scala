@@ -42,40 +42,52 @@ object CleanData {
   }
 
  // checking for not null
- def checkNullKeyColumns(df:DataFrame,
-                         columnList: Seq[String]):DataFrame = {
-   var dfCheckNullKey = df
-   for(i <- columnList) {
-     dfCheckNullKey = dfCheckNullKey.filter(col(i).isNull)
-   }
-
-   dfCheckNullKey
-
- }
-//  def removeNull(df:DataFrame,columnName:Seq[String]): DataFrame ={
-//  var nullDf : DataFrame = df
-//  var notNullDf : DataFrame = df
-//  for (i <- columnName) {
-//    {
-//      nullDf = df.filter(df(i).isNull)
-//      notNullDf = df.filter(df(i).isNotNull)
+//  def checkNullKeyColumns(df:DataFrame,
+//                          columnList: Seq[String]):DataFrame = {
+//    var dfCheckNullKey = df
+//    for(i <- columnList) {
+//      dfCheckNullKey = dfCheckNullKey.filter(col(i).isNull)
 //    }
-//    if(nullDf.count()> 0) {
-//
-//      notNullDf
-//    }
+
+//    dfCheckNullKey
+
 //  }
-//  nullDf
-//}
+  
+  // checking for null values and filter it and write into file
+ def removeNull(df:DataFrame,columnName:Seq[String]): DataFrame ={
+ var nullDf : DataFrame = df
+ var notNullDf : DataFrame = df
+ for (i <- columnName) {
+   {
+     nullDf = df.filter(df(i).isNull)
+     notNullDf = df.filter(df(i).isNotNull)
+   }
+   if(nullDf.count()> 0) {
+     FileWriterService.writeFile(nullDf,
+          FILE_FORMAT,
+          WRITE_PATH,
+          SAVE_FILE_MODE)
+ nullDf
+}
 
-
+// another method for removing null values
   def checkForNull (df: DataFrame, colNames:Seq[String]) : DataFrame = {
 
       val changedColName: Seq[Column] = colNames.map(x => col(x))
       val condition: Column = changedColName.map(x => x.isNull).reduce(_ || _)
       val dfChanged = df.withColumn("nullFlag", when(condition, "true").otherwise("false"))
-      dfChanged.show()
-      dfChanged
+    // filter the null rows from the data frame
+    val  dfNullRows:DataFrame = dfChanged.filter(dfChanged("nullFlag")==="true")
+
+    // if null rows present write into a file
+    if (dfNullRows.count() > 0) {
+      FileWriterService.writeFile(dfNullRows,
+        FILE_FORMAT,
+        WRITE_PATH,
+        SAVE_FILE_MODE)
+    }
+    dfChanged
+      
 
   }
 
