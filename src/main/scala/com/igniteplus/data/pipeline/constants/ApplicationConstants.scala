@@ -18,6 +18,12 @@ object ApplicationConstants {
 
   val TIMESTAMP_TYPE : String = "timestamp"
   val FLOAT_TYPE : String = "float"
+  
+  
+  // output write files
+  val CLICK_STREAM_NULL_ROWS_DATASET: String ="data/output/pipeline_failures/clickstream_null_values"
+  val ITEM_NULL_ROWS_DATASET: String ="data/output/pipeline_failures/item_null_values"
+
 
 
 
