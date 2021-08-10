@@ -35,12 +35,12 @@ object PipeLineService {
     val dfItemLowerCase:DataFrame = CleanData.toLowerCase(dfTrimItemData, ITEM_LOWERCASE_COLUMNS)
 
         // remove null values
-        val dfFilterClickStream : DataFrame = CleanData.checkNullKeyColumns(dfClickStreamCase, CLICK_STREAM_UNIQUE_COLUMNS)
-        val dfFilterItem : DataFrame = CleanData.checkForNull(dfItemLowerCase, ITEM_UNIQUE_COLUMN)
+        val dfFilterClickStream : DataFrame = CleanData.checkNullKeyColumns(dfClickStreamCase, CLICK_STREAM_UNIQUE_COLUMNS,CLICK_STREAM_NULL_ROWS_DATASET)
+        val dfFilterItem : DataFrame = CleanData.checkForNull(dfItemLowerCase, ITEM_UNIQUE_COLUMN, ITEM_NULL_ROWS_DATASET)
 
         // remove duplicates
-        val dfDropClickStreamDup : DataFrame= CleanData.removeDuplicates(dfFilterClickStream, EVENT_TIMESTAMP , CLICK_STREAM_UNIQUE_COLUMNS)
-        val dfDropItemDup:DataFrame = CleanData.removeDuplicates( dfFilterItem, ITEM_ID, Seq(null))
+        val dfDropClickStreamDup : DataFrame= CleanData.removeDuplicates(dfFilterClickStream , CLICK_STREAM_UNIQUE_COLUMNS , EVENT_TIMESTAMP)
+        val dfDropItemDup:DataFrame = CleanData.removeDuplicates( dfFilterItem, ITEM_UNIQUE_COLUMNS, null )
 
 
 
