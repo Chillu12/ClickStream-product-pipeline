@@ -12,9 +12,7 @@ object FileReaderService {
     val dfClickStream: DataFrame = {
       try {
         spark.read.option("header", "true").format(source = "csv").load(path)
-        //dfClickStream.show()
-        //dfClickStream.printSchema()
-        //dfClickStream
+        
       } catch {
         case e: Exception =>
           FileReadException("unable to read files in the given location " + s"$INPUT_LOCATION_CLICK_STREAM")
@@ -26,9 +24,7 @@ object FileReaderService {
       if (dfClickStreamCount == 0) {
         throw FileReadException("no file read from the reader " + s"$INPUT_LOCATION_CLICK_STREAM")
       }
-      else {
-        dfClickStream
-      }
+      
     }
 
 }
