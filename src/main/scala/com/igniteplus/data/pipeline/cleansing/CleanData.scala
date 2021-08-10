@@ -63,10 +63,7 @@ object CleanData {
      notNullDf = df.filter(df(i).isNotNull)
    }
    if(nullDf.count()> 0) {
-     FileWriterService.writeFile(nullDf,
-          FILE_FORMAT,
-          WRITE_PATH,
-          SAVE_FILE_MODE)
+    FileWriterService.writeFile(dfNullRows, FILE_FORMAT,path  )
  nullDf
 }
 
@@ -81,12 +78,9 @@ object CleanData {
 
     // if null rows present write into a file
     if (dfNullRows.count() > 0) {
-      FileWriterService.writeFile(dfNullRows,
-        FILE_FORMAT,
-        WRITE_PATH,
-        SAVE_FILE_MODE)
+       FileWriterService.writeFile(dfNullRows, FILE_FORMAT,path  )
     }
-    dfChanged
+   dfNullRows.drop(col("nullFlag"))
       
 
   }
@@ -108,17 +102,17 @@ object CleanData {
   // removing duplicates
   def removeDuplicates (df:DataFrame ,
                         orderByCol: String ,
-                        partitionColumns : Seq[String]
+                        keyColumns : Seq[String]
                        ) : DataFrame  = {
-    if (orderByCol == "event_timestamp") {
-      val windowSpec = Window.partitionBy(partitionColumns.map(col): _*).orderBy(desc(orderByCol))
+    if (orderByCol != null ) {
+      val windowSpec = Window.partitionBy(keyColumns.map(col): _*).orderBy(desc(orderByCol.toString))
       val dfDropDuplicate: DataFrame = df.withColumn(colName = "row_number", row_number().over(windowSpec))
         .filter(conditionExpr = "row_number == 1").drop("row_number")
       println("Distinct count of session_id and visitor_id  and event_timestamp and item id: " + dfDropDuplicate.count())
       dfDropDuplicate
     }
     else {
-      val dfDropDupItem = df.dropDuplicates(orderByCol)
+      val dfDropDupItem = df.dropDuplicates(keyColumns)
       dfDropDupItem.show()
       dfDropDupItem
 
